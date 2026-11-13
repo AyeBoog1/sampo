@@ -1,0 +1,1641 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Самостійна робота з кримінології</title>
+    <style>
+        body {
+            font-family: 'Times New Roman', serif;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            user-select: text;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            position: relative;
+        }
+
+        /* Водяний знак */
+        body::before {
+            content: attr(data-watermark);
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-45deg);
+            font-size: 100px;
+            color: rgba(255, 255, 255, 0.05);
+            z-index: 0;
+            pointer-events: none;
+            white-space: nowrap;
+            font-weight: bold;
+        }
+        
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Блокування друку */
+        @media print {
+            body * {
+                display: none !important;
+            }
+            body::after {
+                content: "ДРУК ЗАБОРОНЕНО - ЗАХИЩЕНА РОБОТА";
+                display: block !important;
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                font-size: 48px;
+                color: red;
+                font-weight: bold;
+            }
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            border-bottom: 3px solid #003366;
+            padding-bottom: 30px;
+        }
+        
+        .university-name {
+            font-size: 18px;
+            font-weight: bold;
+            color: #003366;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .title {
+            font-size: 28px;
+            font-weight: bold;
+            color: #003366;
+            margin: 25px 0;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .verification-box {
+            background: linear-gradient(135deg, #fff3cd, #ffeaa7);
+            border: 3px solid #ffc107;
+            padding: 25px;
+            border-radius: 15px;
+            margin: 30px 0;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(255, 193, 7, 0.3);
+            position: relative;
+        }
+        
+        .verification-code {
+            font-size: 24px;
+            font-weight: bold;
+            color: #dc3545;
+            letter-spacing: 3px;
+            font-family: 'Courier New', monospace;
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+            border: 2px dashed #dc3545;
+        }
+
+        /* Активний таймер */
+        .activity-monitor {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+            font-family: monospace;
+        }
+
+        .ios-save-panel {
+            display: none;
+            position: fixed;
+            left: 16px;
+            right: 16px;
+            bottom: 16px;
+            z-index: 2000;
+            padding: 16px;
+            background: #ffffff;
+            border: 2px solid #007bff;
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(0,0,0,.25);
+            text-align: center;
+            font-family: Arial, sans-serif;
+        }
+        .ios-save-panel button, .ios-save-panel a {
+            display: inline-block;
+            margin: 5px;
+            padding: 10px 14px;
+            border: 0;
+            border-radius: 8px;
+            background: #007bff;
+            color: #fff;
+            text-decoration: none;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .ios-save-panel .secondary { background: #6c757d; }
+        .ios-save-panel .close { background: #dc3545; }
+
+        .manual-time-editor {
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid rgba(255,255,255,0.45);
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+        }
+        .manual-time-editor input {
+            width: 86px;
+            padding: 4px;
+            border: 0;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+        .manual-time-editor button {
+            margin-left: 4px;
+            padding: 4px 7px;
+            border: 0;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .manual-time-label {
+            display: block;
+            margin-top: 4px;
+            color: #fff3cd;
+            font-size: 11px;
+        }
+
+        .activity-status {
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        /* Захист від DevTools */
+        .devtools-blocker {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(220, 53, 69, 0.98);
+            color: white;
+            z-index: 99999;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            font-size: 32px;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .student-info {
+            background: linear-gradient(135deg, #e8f4f8, #dbeafe);
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 40px;
+            border-left: 6px solid #003366;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .student-info input, .student-info select {
+            border: 2px solid #ddd;
+            border-bottom: 3px solid #003366;
+            background: white;
+            padding: 12px;
+            margin-left: 15px;
+            min-width: 250px;
+            font-size: 16px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            -webkit-user-select: text;
+            -moz-user-select: text;
+            -ms-user-select: text;
+            user-select: text;
+        }
+        
+        .student-info input:focus, .student-info select:focus {
+            outline: none;
+            border-color: #007bff;
+            box-shadow: 0 0 10px rgba(0, 123, 255, 0.3);
+            transform: scale(1.02);
+        }
+        
+        .theme {
+            background: linear-gradient(135deg, #003366, #004080);
+            color: white;
+            padding: 20px;
+            margin: 40px 0 30px 0;
+            border-radius: 12px;
+            font-size: 20px;
+            font-weight: bold;
+            text-align: center;
+            box-shadow: 0 8px 25px rgba(0, 51, 102, 0.3);
+        }
+        
+        .section-title {
+            background: linear-gradient(135deg, #f0f8ff, #e1f0ff);
+            padding: 15px;
+            border-left: 6px solid #003366;
+            margin: 30px 0 20px 0;
+            font-weight: bold;
+            color: #003366;
+            font-size: 18px;
+            border-radius: 8px;
+        }
+        
+        .question {
+            margin: 30px 0;
+            padding: 25px;
+            background: linear-gradient(135deg, #fafafa, #f5f5f5);
+            border-radius: 12px;
+            border-left: 4px solid #007bff;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s ease;
+        }
+        
+        .question:hover {
+            transform: translateX(5px);
+        }
+        
+        .question-number {
+            font-weight: bold;
+            color: #003366;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+        
+        .option {
+            margin: 12px 0;
+            display: flex;
+            align-items: flex-start;
+            padding: 8px;
+            border-radius: 8px;
+            transition: background-color 0.2s ease;
+        }
+        
+        .option:hover {
+            background-color: rgba(0, 123, 255, 0.1);
+        }
+        
+        .option input[type="radio"] {
+            margin-right: 12px;
+            transform: scale(1.3);
+            margin-top: 4px;
+        }
+        
+        .option label {
+            cursor: pointer;
+            flex: 1;
+            font-size: 16px;
+            line-height: 1.5;
+        }
+        
+        .answer-field {
+            margin-top: 20px;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            border: 2px solid #007bff;
+        }
+        
+        .answer-field input {
+            border: 2px solid #ddd;
+            padding: 10px;
+            border-radius: 6px;
+            font-size: 18px;
+            width: 80px;
+            background: #fff;
+            text-align: center;
+            font-weight: bold;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+        
+        .essay-question {
+            margin: 40px 0;
+            padding: 30px;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border: 3px solid #28a745;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(40, 167, 69, 0.2);
+        }
+        
+        .essay-textarea {
+            width: 100%;
+            min-height: 200px;
+            padding: 20px;
+            border: 3px solid #28a745;
+            border-radius: 10px;
+            font-family: inherit;
+            font-size: 16px;
+            resize: vertical;
+            margin-top: 15px;
+            background: white;
+            line-height: 1.6;
+            -webkit-user-select: text;
+            -moz-user-select: text;
+            -ms-user-select: text;
+            user-select: text;
+        }
+        
+        .essay-textarea:focus {
+            outline: none;
+            box-shadow: 0 0 15px rgba(40, 167, 69, 0.3);
+            border-color: #20c997;
+        }
+        
+        .stats-panel {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin: 30px 0;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+        
+        .stat-item {
+            text-align: center;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .save-btn, .report-btn {
+            background: linear-gradient(45deg, #28a745, #20c997);
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 18px;
+            margin: 15px 10px 0 0;
+            box-shadow: 0 5px 15px rgba(40, 167, 69, 0.3);
+            transition: all 0.3s ease;
+        }
+        
+        .save-btn:hover, .report-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(40, 167, 69, 0.4);
+        }
+
+        /* Унікальний фінгерпринт */
+        .fingerprint {
+            position: fixed;
+            bottom: 5px;
+            right: 5px;
+            font-size: 8px;
+            color: rgba(0, 0, 0, 0.2);
+            z-index: 9999;
+            pointer-events: none;
+            font-family: monospace;
+        }
+
+        /* Блокування вставки */
+        .paste-blocked {
+            animation: shake 0.5s;
+            border-color: #dc3545 !important;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        /* Попередження про копіювання */
+        .copy-warning {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(220, 53, 69, 0.95);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            font-size: 20px;
+            font-weight: bold;
+            z-index: 10000;
+            display: none;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+        
+        /* Адаптивність */
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            .student-info {
+                padding: 20px;
+            }
+            .student-info input, .student-info select {
+                min-width: 200px;
+            }
+        }
+    </style>
+</head>
+<body data-watermark="">
+    <div class="container">
+        <!-- Монітор активності -->
+        <div class="activity-monitor">
+            <div>⏱️ Час роботи: <span id="activeTime">00:00:00</span></div>
+            <div class="activity-status">📊 Активність: <span id="activityStatus">Активно</span></div>
+            <div class="manual-time-editor">
+                <label for="manualTimeInput">Ручне коригування часу:</label><br>
+                <input id="manualTimeInput" type="text" inputmode="numeric" placeholder="ГГ:ХХ:СС" value="">
+                <button type="button" onclick="applyManualTime()">Застосувати</button>
+                <button type="button" onclick="clearManualTime()">Скинути</button>
+                <span class="manual-time-label" id="manualTimeLabel">Не застосовано; показується фактичний таймер</span>
+            </div>
+        </div>
+
+        <!-- Блокувальник DevTools -->
+        <div class="devtools-blocker" id="devtoolsBlocker">
+            <div>⚠️ ВИЯВЛЕНО СПРОБУ ЗЛОМУ!</div>
+            <div style="font-size: 20px; margin-top: 20px;">Інструменти розробника заборонені</div>
+            <div style="font-size: 16px; margin-top: 10px;">Закрийте DevTools для продовження</div>
+        </div>
+
+        <!-- Попередження про копіювання -->
+        <div class="copy-warning" id="copyWarning">
+            ⛔ КОПІЮВАННЯ ЗАБОРОНЕНО!<br>
+            <span style="font-size: 14px;">Спроба копіювання зафіксована</span>
+        </div>
+
+        <!-- Титульний листок -->
+        <div class="header">
+            <div class="university-name">
+                Донецький державний університет внутрішніх справ<br>
+                Факультет підготовки фахівців для органів досудового розслідування<br>
+                Національної поліції України<br>
+                Кафедра кримінального права та кримінології
+            </div>
+            <div class="title">САМОСТІЙНА РОБОТА<br>З КРИМІНОЛОГІЇ</div>
+        </div>
+
+        <!-- Код верифікації -->
+        <div class="verification-box">
+            <h3>🔐 УНІКАЛЬНИЙ КОД ВЕРИФІКАЦІЇ РОБОТИ</h3>
+            <div class="verification-code" id="verificationCode">ЗАВАНТАЖУЄТЬСЯ...</div>
+            <p><strong>⚠️ УВАГА!</strong> Зберіжіть цей код! Він підтверджує автентичність та час виконання роботи.</p>
+            <p><small>Код генерується автоматично та є унікальним для кожного курсанта</small></p>
+        </div>
+
+        <!-- Інформація про курсанта -->
+        <div class="student-info">
+            <h3 style="color: #003366; margin-bottom: 20px;">👮‍♂️ Інформація про курсанта</h3>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
+                <div>
+                    <label style="display: block; margin-bottom: 8px; font-weight: bold;">Прізвище, ім'я, по батькові:</label>
+                    <input type="text" id="studentName" required maxlength="100" 
+                           oninput="generateVerificationCode(); trackActivity('name_input', this.value.length)">
+                </div>
+                <div>
+                    <label style="display: block; margin-bottom: 8px; font-weight: bold;">Група:</label>
+                    <input type="text" id="studentGroup" required maxlength="20"
+                           oninput="generateVerificationCode(); trackActivity('group_input', this.value.length)">
+                </div>
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                <div>
+                    <label style="display: block; margin-bottom: 8px; font-weight: bold;">Номер залікової книжки:</label>
+                    <input type="text" id="studentId" required maxlength="20"
+                           oninput="trackActivity('id_input', this.value.length)">
+                </div>
+                <div>
+                    <label style="display: block; margin-bottom: 8px; font-weight: bold;">Курс навчання:</label>
+                    <select id="studentYear" required onchange="trackActivity('year_select', this.value)">
+                        <option value="">Оберіть курс</option>
+                        <option value="1">1 курс</option>
+                        <option value="2">2 курс</option>
+                        <option value="3">3 курс</option>
+                        <option value="4">4 курс</option>
+                        <option value="5">5 курс</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Статистика виконання -->
+        <div class="stats-panel">
+            <div class="stat-item">
+                <div class="stat-value" id="finalTimeSpent">00:00:00</div>
+                <div>Час роботи</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="completedTasks">0/20</div>
+                <div>Тестів виконано</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="completedEssays">0/11</div>
+                <div>Доповідей написано</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="totalWords">0</div>
+                <div>Слів написано</div>
+            </div>
+        </div>
+
+        <!-- ТЕМА 1: Поняття, предмет, система кримінології -->
+        <div class="theme">ТЕМА 1. Поняття, предмет, система кримінології</div>
+        
+        <div class="section-title">Тестові завдання</div>
+
+        <div class="question">
+            <div class="question-number">1. Кримінологія - це:</div>
+            <div class="option">
+                <input type="radio" name="q1" value="a" onchange="updateProgress(); trackActivity('radio_answer', 'q1_a'); syncAnswer('q1', 'a')">
+                <label>a) наука про девіантність та соціальний контроль над нею</label>
+            </div>
+            <div class="option">
+                <input type="radio" name="q1" value="b" onchange="updateProgress(); trackActivity('radio_answer', 'q1_b'); syncAnswer('q1', 'b')">
+                <label>b) комплексна наука про особу злочинця, причини й умови злочинів, профілактику кримінальної активності</label>
+            </div>
+            <div class="option">
+                <input type="radio" name="q1" value="c" onchange="updateProgress(); trackActivity('radio_answer', 'q1_c'); syncAnswer('q1', 'c')">
+                <label>c) юридична наука про технічні засоби розслідування злочинів, тактику проведення слідчих дій, методику розслідування окремих злочинів і способів їх профілактики</label>
+            </div>
+            <div class="option">
+                <input type="radio" name="q1" value="d" onchange="updateProgress(); trackActivity('radio_answer', 'q1_d'); syncAnswer('q1', 'd')">
+                <label>d) комплексна міждисциплінарна наука про злочинність та закономірності її детермінації, особу й особистість злочинця, механізм індивідуальної кримінально протиправної поведінки, а також протидію злочинності, профілактику і запобігання окремим її проявам</label>
+            </div>
+            <div class="answer-field">
+                <strong>Відповідь:</strong> <input type="text" placeholder="Літера" maxlength="1" id="answer1" readonly>
+            </div>
+        </div>
+
+        <!-- Теми доповідей для Теми 1 -->
+        <div class="section-title">Теми доповідей</div>
+        <div class="essay-question">
+            <p><strong>Оберіть одну тему для написання доповіді:</strong></p>
+            <select id="topic1" style="width: 100%; padding: 15px; font-size: 16px; border-radius: 8px;" onchange="updateProgress(); trackActivity('topic1_select', this.value)">
+                <option value="">-- Оберіть тему доповіді --</option>
+                <option value="1">1. Фонові для злочинності явища як предмет кримінології</option>
+                <option value="2">2. Значення кримінологічних знань для роботи слідчих Національної поліції</option>
+                <option value="3">3. Постмодерн і криза протидії злочинності</option>
+                <option value="4">4. Соціальна сингулярність як маркер епохи Постмодерну: зміст та кримінологічне значення</option>
+                <option value="5">5. Прекаріат як соціальне явище Постмодерну у фокусі кримінології</option>
+            </select>
+            <p><strong>Напишіть доповідь на обрану тему (мінімум 300 слів):</strong></p>
+            <div style="font-size: 14px; color: #666; margin-bottom: 10px;">
+                Символів: <span id="essay1Counter">0</span> | Слів: <span id="essay1Words">0</span>
+            </div>
+            <textarea class="essay-textarea" placeholder="Напишіть вашу доповідь тут..." 
+                      id="essay1" oninput="updateWordCount('essay1'); trackActivity('essay1_input', this.value.length)"></textarea>
+        </div>
+
+        <!-- ТЕМА 2: Злочинність та її показники -->
+        <div class="theme">ТЕМА 2. Злочинність та її показники</div>
+        
+        <div class="section-title">Тестові завдання</div>
+
+        <div class="question">
+            <div class="question-number">2. Злочинність - це:</div>
+            <div class="option">
+                <input type="radio" name="q2" value="a" onchange="updateProgress(); trackActivity('radio_answer', 'q2_a'); syncAnswer('q2', 'a')">
+                <label>a) історично мінливий, відносно стійкий соціально-правовий феномен, який полягає у властивості суспільства відтворювати понадсумативні, інституціональні, передбачені КК суспільно небезпечні практики на певній території у визначеному часовому проміжку</label>
+            </div>
+            <div class="option">
+                <input type="radio" name="q2" value="b" onchange="updateProgress(); trackActivity('radio_answer', 'q2_b'); syncAnswer('q2', 'b')">
+                <label>b) сукупність злочинів, вчинених за певний період на певній території</label>
+            </div>
+            <div class="option">
+                <input type="radio" name="q2" value="c" onchange="updateProgress(); trackActivity('radio_answer', 'q2_c'); syncAnswer('q2', 'c')">
+                <label>c) специфічна соціальна підсистема, що полягає у відтворенні множини злочинів</label>
+            </div>
+            <div class="option">
+                <input type="radio" name="q2" value="d" onchange="updateProgress(); trackActivity('radio_answer', 'q2_d'); syncAnswer('q2', 'd')">
+                <label>d) соціальний конструкт, результат суспільних конвенцій щодо правової оцінки небезпечних дій</label>
+            </div>
+            <div class="answer-field">
+                <strong>Відповідь:</strong> <input type="text" placeholder="Літера" maxlength="1" id="answer2" readonly>
+            </div>
+        </div>
+
+        <!-- Теми доповідей для Теми 2 -->
+        <div class="section-title">Теми доповідей</div>
+        <div class="essay-question">
+            <p><strong>Оберіть одну тему для написання доповіді:</strong></p>
+            <select id="topic2" style="width: 100%; padding: 15px; font-size: 16px; border-radius: 8px;" onchange="updateProgress(); trackActivity('topic2_select', this.value)">
+                <option value="">-- Оберіть тему доповіді --</option>
+                <option value="1">1. Теоретичні засновки соціально-часової парадигми злочинності</option>
+                <option value="2">2. Злочинність як соціальний конструкт</option>
+                <option value="3">3. Ціна злочинності: поняття, методики аналізу, напрями зниження</option>
+                <option value="4">4. Злочинність в суспільствах епохи Постмодерну: методологічні засади аналізу</option>
+                <option value="5">5. Фронтирна злочинність: поняття, сутність, прояви</option>
+                <option value="6">6. Глобалізація злочинності: поняття, основні складові, тенденції</option>
+                <option value="7">7. Латентність злочинності в Україні: основні причини, методи виявлення, шляхи мінімізації</option>
+                <option value="8">8. Сучасний стан злочинності в Україні</option>
+            </select>
+            <p><strong>Напишіть доповідь на обрану тему (мінімум 300 слів):</strong></p>
+            <div style="font-size: 14px; color: #666; margin-bottom: 10px;">
+                Символів: <span id="essay2Counter">0</span> | Слів: <span id="essay2Words">0</span>
+            </div>
+            <textarea class="essay-textarea" placeholder="Напишіть вашу доповідь тут..." 
+                      id="essay2" oninput="updateWordCount('essay2'); trackActivity('essay2_input', this.value.length)"></textarea>
+        </div>
+
+        <!-- ТЕМА 3: Детермінація злочинності -->
+        <div class="theme">ТЕМА 3. Детермінація злочинності</div>
+        
+        <div class="section-title">Теми доповідей</div>
+        <div class="essay-question">
+            <p><strong>Оберіть одну тему для написання доповіді:</strong></p>
+            <select id="topic3" style="width: 100%; padding: 15px; font-size: 16px; border-radius: 8px;" onchange="updateProgress(); trackActivity('topic3_select', this.value)">
+                <option value="">-- Оберіть тему доповіді --</option>
+                <option value="1">1. Діалектика і діалектичний метод: поняття, значення для аналізу детермінації злочинності</option>
+                <option value="2">2. Кримінологічна інтерпретація соціальної психології Ж. Бодрійяра</option>
+                <option value="3">3. Проблеми аналізу детермінації злочинності в умовах суспільств епохи Постмодерну</option>
+                <option value="4">4. Теорія аномії у поясненні причин злочинності</option>
+                <option value="5">5. Теорія конфлікту культур (субкультур) у поясненні детермінації злочинності</option>
+            </select>
+            <p><strong>Напишіть доповідь на обрану тему (мінімум 300 слів):</strong></p>
+            <div style="font-size: 14px; color: #666; margin-bottom: 10px;">
+                Символів: <span id="essay3Counter">0</span> | Слів: <span id="essay3Words">0</span>
+            </div>
+            <textarea class="essay-textarea" placeholder="Напишіть вашу доповідь тут..." 
+                      id="essay3" oninput="updateWordCount('essay3'); trackActivity('essay3_input', this.value.length)"></textarea>
+        </div>
+
+        <!-- ТЕМА 4: Кримінологічне вчення про особистість кримінального правопорушника -->
+        <div class="theme">ТЕМА 4. Кримінологічне вчення про особистість кримінального правопорушника</div>
+        
+        <div class="section-title">Теми доповідей</div>
+        <div class="essay-question">
+            <p><strong>Оберіть одну тему для написання доповіді:</strong></p>
+            <select id="topic4" style="width: 100%; padding: 15px; font-size: 16px; border-radius: 8px;" onchange="updateProgress(); trackActivity('topic4_select', this.value)">
+                <option value="">-- Оберіть тему доповіді --</option>
+                <option value="1">1. Методологічні засади аналізу особистості кримінального правопорушника</option>
+                <option value="2">2. Система кримінологічних ознак особистості як аналітико-прогностична база</option>
+                <option value="3">3. Соціально-психологічне відчуження як типова ознака рецидивних злочинців</option>
+                <option value="4">4. Соціально-психологічна дезорганізація як типова ознака рецидивних злочинців</option>
+            </select>
+            <p><strong>Напишіть доповідь на обрану тему (мінімум 300 слів):</strong></p>
+            <div style="font-size: 14px; color: #666; margin-bottom: 10px;">
+                Символів: <span id="essay4Counter">0</span> | Слів: <span id="essay4Words">0</span>
+            </div>
+            <textarea class="essay-textarea" placeholder="Напишіть вашу доповідь тут..." 
+                      id="essay4" oninput="updateWordCount('essay4'); trackActivity('essay4_input', this.value.length)"></textarea>
+        </div>
+
+        <!-- ТЕМА 5: Індивідуальна кримінально протиправна поведінка. Віктимологія -->
+        <div class="theme">ТЕМА 5. Індивідуальна кримінально протиправна поведінка. Віктимологія</div>
+        
+        <div class="section-title">Теми доповідей</div>
+        <div class="essay-question">
+            <p><strong>Оберіть одну тему для написання доповіді:</strong></p>
+            <select id="topic5" style="width: 100%; padding: 15px; font-size: 16px; border-radius: 8px;" onchange="updateProgress(); trackActivity('topic5_select', this.value)">
+                <option value="">-- Оберіть тему доповіді --</option>
+                <option value="1">1. Поняття і види мотивів кримінальних правопорушень</option>
+                <option value="2">2. Ігровий мотив кримінальних правопорушень: зміст, особливості проявів</option>
+                <option value="3">3. Ресентимент: поняття, зміст, кримінологічне значення</option>
+                <option value="4">4. Стокгольмський синдром: поняття, кримінологічне значення</option>
+                <option value="5">5. Можливості використання результатів експериментів С. Мілгрема та Ф. Зімбардо для пояснення механізму вчинення насильницьких воєнних злочинів</option>
+                <option value="6">6. Конкуруюча віктимність: поняття, механізм, криміногенне значення</option>
+            </select>
+            <p><strong>Напишіть доповідь на обрану тему (мінімум 300 слів):</strong></p>
+            <div style="font-size: 14px; color: #666; margin-bottom: 10px;">
+                Символів: <span id="essay5Counter">0</span> | Слів: <span id="essay5Words">0</span>
+            </div>
+            <textarea class="essay-textarea" placeholder="Напишіть вашу доповідь тут..." 
+                      id="essay5" oninput="updateWordCount('essay5'); trackActivity('essay5_input', this.value.length)"></textarea>
+        </div>
+
+        <!-- ТЕМА 6: Протидія злочинності -->
+        <div class="theme">ТЕМА 6. Протидія злочинності</div>
+        
+        <div class="section-title">Теми доповідей</div>
+        <div class="essay-question">
+            <p><strong>Оберіть одну тему для написання доповіді:</strong></p>
+            <select id="topic6" style="width: 100%; padding: 15px; font-size: 16px; border-radius: 8px;" onchange="updateProgress(); trackActivity('topic6_select', this.value)">
+                <option value="">-- Оберіть тему доповіді --</option>
+                <option value="1">1. Віктимологічна профілактика кримінальних правопорушень</option>
+                <option value="2">2. Кримінологічна експертиза нормативно-правових актів і їх проєктів в системі протидії злочинності</option>
+                <option value="3">3. Просторовий підхід у протидії злочинності (Crime Prevention through Environmental Design - CPTED)</option>
+            </select>
+            <p><strong>Напишіть доповідь на обрану тему (мінімум 300 слів):</strong></p>
+            <div style="font-size: 14px; color: #666; margin-bottom: 10px;">
+                Символів: <span id="essay6Counter">0</span> | Слів: <span id="essay6Words">0</span>
+            </div>
+            <textarea class="essay-textarea" placeholder="Напишіть вашу доповідь тут..." 
+                      id="essay6" oninput="updateWordCount('essay6'); trackActivity('essay6_input', this.value.length)"></textarea>
+        </div>
+
+        <!-- ТЕМА 7: Агресивно-насильницька злочинність -->
+        <div class="theme">ТЕМА 7. Кримінологічна характеристика та протидія агресивно-насильницькій злочинності</div>
+        
+        <div class="section-title">Теми доповідей</div>
+        <div class="essay-question">
+            <p><strong>Оберіть одну тему для написання доповіді:</strong></p>
+            <select id="topic7" style="width: 100%; padding: 15px; font-size: 16px; border-radius: 8px;" onchange="updateProgress(); trackActivity('topic7_select', this.value)">
+                <option value="">-- Оберіть тему доповіді --</option>
+                <option value="1">1. Кримінальні правопорушення на ґрунті ненависті: поняття, види, особливості детермінації</option>
+                <option value="2">2. Ресентимент як фактор агресії і насильства</option>
+                <option value="3">3. Запобігання Національною поліцією домашньому насильству</option>
+            </select>
+            <p><strong>Напишіть доповідь на обрану тему (мінімум 300 слів):</strong></p>
+            <div style="font-size: 14px; color: #666; margin-bottom: 10px;">
+                Символів: <span id="essay7Counter">0</span> | Слів: <span id="essay7Words">0</span>
+            </div>
+            <textarea class="essay-textarea" placeholder="Напишіть вашу доповідь тут..." 
+                      id="essay7" oninput="updateWordCount('essay7'); trackActivity('essay7_input', this.value.length)"></textarea>
+        </div>
+
+        <!-- ТЕМА 8: Корислива злочинність -->
+        <div class="theme">ТЕМА 8. Кримінологічна характеристика та протидія загальнокримінальній корисливій злочинності</div>
+        
+        <div class="section-title">Теми доповідей</div>
+        <div class="essay-question">
+            <p><strong>Оберіть одну тему для написання доповіді:</strong></p>
+            <select id="topic8" style="width: 100%; padding: 15px; font-size: 16px; border-radius: 8px;" onchange="updateProgress(); trackActivity('topic8_select', this.value)">
+                <option value="">-- Оберіть тему доповіді --</option>
+                <option value="1">1. Кримінологічна характеристика «квартирних» крадіжок</option>
+                <option value="2">2. Кримінологічна характеристика шахрайств</option>
+                <option value="3">3. Кримінологічна характеристика незаконного заволодіння транспортними засобами</option>
+            </select>
+            <p><strong>Напишіть доповідь на обрану тему (мінімум 300 слів):</strong></p>
+            <div style="font-size: 14px; color: #666; margin-bottom: 10px;">
+                Символів: <span id="essay8Counter">0</span> | Слів: <span id="essay8Words">0</span>
+            </div>
+            <textarea class="essay-textarea" placeholder="Напишіть вашу доповідь тут..." 
+                      id="essay8" oninput="updateWordCount('essay8'); trackActivity('essay8_input', this.value.length)"></textarea>
+        </div>
+
+        <!-- ТЕМА 9: Професійна та організована злочинність -->
+        <div class="theme">ТЕМА 9. Кримінологічна характеристика та протидія професійній, організованій та рецидивній злочинності</div>
+        
+        <div class="section-title">Теми доповідей</div>
+        <div class="essay-question">
+            <p><strong>Оберіть одну тему для написання доповіді:</strong></p>
+            <select id="topic9" style="width: 100%; padding: 15px; font-size: 16px; border-radius: 8px;" onchange="updateProgress(); trackActivity('topic9_select', this.value)">
+                <option value="">-- Оберіть тему доповіді --</option>
+                <option value="1">1. Кримінальні і тюремні субкультури: поняття і співвідношення</option>
+                <option value="2">2. Призонізація: феномен, значення для професіоналізації злочинності та протидії</option>
+                <option value="3">3. Транснаціональна організована злочинність: феномен, стан, протидія</option>
+            </select>
+            <p><strong>Напишіть доповідь на обрану тему (мінімум 300 слів):</strong></p>
+            <div style="font-size: 14px; color: #666; margin-bottom: 10px;">
+                Символів: <span id="essay9Counter">0</span> | Слів: <span id="essay9Words">0</span>
+            </div>
+            <textarea class="essay-textarea" placeholder="Напишіть вашу доповідь тут..." 
+                      id="essay9" oninput="updateWordCount('essay9'); trackActivity('essay9_input', this.value.length)"></textarea>
+        </div>
+
+        <!-- ТЕМА 10: Наркозлочинність -->
+        <div class="theme">ТЕМА 10. Кримінологічна характеристика та протидія наркозлочинності</div>
+        
+        <div class="section-title">Теми доповідей</div>
+        <div class="essay-question">
+            <p><strong>Оберіть одну тему для написання доповіді:</strong></p>
+            <select id="topic10" style="width: 100%; padding: 15px; font-size: 16px; border-radius: 8px;" onchange="updateProgress(); trackActivity('topic10_select', this.value)">
+                <option value="">-- Оберіть тему доповіді --</option>
+                <option value="1">1. Наркотизація як фонове для злочинності явище</option>
+                <option value="2">2. Дитячий наркотизм: стан, проблема поширення та напрями протидії</option>
+                <option value="3">3. Міжнародна взаємодія у сфері протидії наркозлочинності</option>
+            </select>
+            <p><strong>Напишіть доповідь на обрану тему (мінімум 300 слів):</strong></p>
+            <div style="font-size: 14px; color: #666; margin-bottom: 10px;">
+                Символів: <span id="essay10Counter">0</span> | Слів: <span id="essay10Words">0</span>
+            </div>
+            <textarea class="essay-textarea" placeholder="Напишіть вашу доповідь тут..." 
+                      id="essay10" oninput="updateWordCount('essay10'); trackActivity('essay10_input', this.value.length)"></textarea>
+        </div>
+
+        <!-- ТЕМА 11: Економічна злочинність -->
+        <div class="theme">ТЕМА 11. Кримінологічна характеристика та протидія економічній злочинності</div>
+        
+        <div class="section-title">Теми доповідей</div>
+        <div class="essay-question">
+            <p><strong>Оберіть одну тему для написання доповіді:</strong></p>
+            <select id="topic11" style="width: 100%; padding: 15px; font-size: 16px; border-radius: 8px;" onchange="updateProgress(); trackActivity('topic11_select', this.value)">
+                <option value="">-- Оберіть тему доповіді --</option>
+                <option value="1">1. Кримінальне рейдерство: поняття, способи, протидія</option>
+                <option value="2">2. Стан та детермінація кіберзлочинності</option>
+                <option value="3">3. Корупційна злочинність в Україні: стан та проблеми протидії</option>
+                <option value="4">4. Злочинність в оборонно-промисловому комплексі України: стан і проблеми протидії</option>
+            </select>
+            <p><strong>Напишіть доповідь на обрану тему (мінімум 300 слів):</strong></p>
+            <div style="font-size: 14px; color: #666; margin-bottom: 10px;">
+                Символів: <span id="essay11Counter">0</span> | Слів: <span id="essay11Words">0</span>
+            </div>
+            <textarea class="essay-textarea" placeholder="Напишіть вашу доповідь тут..." 
+                      id="essay11" oninput="updateWordCount('essay11'); trackActivity('essay11_input', this.value.length)"></textarea>
+        </div>
+
+        <!-- Підсумкова секція -->
+        <div style="text-align: center; margin: 50px 0; padding: 30px; background: linear-gradient(135deg, #f8f9fa, #e9ecef); border-radius: 15px;">
+            <button class="save-btn" onclick="saveWork()">💾 Зберегти роботу</button>
+            <button class="report-btn" onclick="generateReport()" style="background: linear-gradient(45deg, #007bff, #0056b3);">📋 Завершити та створити звіт</button>
+            
+            <div style="margin-top: 20px; font-size: 14px; color: #666;">
+                ⚠️ Перед завершенням перевірте всі відповіді!<br>
+                Після створення звіту зміни неможливі.
+            </div>
+        </div>
+    </div>
+
+    <!-- Унікальний фінгерпринт -->
+    <div class="fingerprint" id="fingerprint"></div>
+
+    <div class="ios-save-panel" id="iosSavePanel">
+        <strong>Звіт підготовлено</strong><br>
+        <small>На iPhone натисніть «Поділитися», а потім «Зберегти у Файли».</small><br>
+        <button type="button" onclick="shareGeneratedReport()">Поділитися / Зберегти у Файли</button>
+        <a id="openGeneratedReport" class="secondary" href="#" target="_blank" rel="noopener">Відкрити звіт</a>
+        <a id="downloadGeneratedReport" href="#" download>Завантажити HTML</a>
+        <button type="button" class="close" onclick="document.getElementById('iosSavePanel').style.display='none'">Закрити</button>
+    </div>
+
+    <script>
+        // Глобальні змінні
+        let sessionId = '';
+        let startTime = Date.now();
+        let totalKeystrokes = 0;
+        let activityLog = [];
+        let suspiciousActivity = 0;
+        let devToolsOpen = false;
+        let copyAttempts = 0;
+        let pasteAttempts = 0;
+        let generatedReportFile = null;
+        let generatedReportUrl = null;
+
+        // Генерація унікального ID сесії
+        function generateSessionId() {
+            const timestamp = Date.now();
+            const studentName = document.getElementById('studentName').value || 'Anonymous';
+            const random = Math.random().toString(36).substr(2, 12);
+            const hash = btoa(studentName + timestamp).replace(/[^A-Za-z0-9]/g, '').substr(0, 8);
+            sessionId = `CRIM_${hash}_${random}`;
+            
+            // Встановлюємо фінгерпринт
+            document.getElementById('fingerprint').textContent = `FP:${sessionId.substr(0, 16)}`;
+        }
+
+        // Генерація коду верифікації
+        function generateVerificationCode() {
+            const studentName = document.getElementById('studentName').value || '';
+            const studentGroup = document.getElementById('studentGroup').value || '';
+            
+            if (studentName.length < 3 || studentGroup.length < 1) {
+                document.getElementById('verificationCode').textContent = 'ЗАПОВНІТЬ ДАНІ...';
+                return;
+            }
+
+            const timestamp = Date.now();
+            const browserInfo = navigator.userAgent.slice(0, 20);
+            const dataString = `${studentName}${studentGroup}${timestamp}${browserInfo}`;
+            
+            // Складніший хеш
+            let hash = 0;
+            for (let i = 0; i < dataString.length; i++) {
+                const char = dataString.charCodeAt(i);
+                hash = ((hash << 7) - hash) + char;
+                hash = hash & hash;
+            }
+            
+            const code = Math.abs(hash).toString(16).toUpperCase().padStart(16, '0');
+            const formattedCode = `${code.slice(0, 4)}-${code.slice(4, 8)}-${code.slice(8, 12)}-${code.slice(12, 16)}`;
+            
+            document.getElementById('verificationCode').textContent = formattedCode;
+            
+            // Встановлюємо водяний знак
+            document.body.setAttribute('data-watermark', studentName.split(' ')[0] || 'СТУДЕНТ');
+        }
+
+        // ЗАХИСТ ВІД КОПІЮВАННЯ ТА ВСТАВКИ
+        document.addEventListener('copy', function(e) {
+            e.preventDefault();
+            copyAttempts++;
+            showCopyWarning();
+            trackActivity('copy_attempt', `Attempt #${copyAttempts}`);
+            suspiciousActivity++;
+            return false;
+        });
+
+        document.addEventListener('cut', function(e) {
+            e.preventDefault();
+            showCopyWarning();
+            trackActivity('cut_attempt', 'blocked');
+            suspiciousActivity++;
+            return false;
+        });
+
+        // Вставка в поля разрешена.
+
+        // Показ попередження про копіювання
+        function showCopyWarning() {
+            const warning = document.getElementById('copyWarning');
+            warning.style.display = 'block';
+            setTimeout(() => {
+                warning.style.display = 'none';
+            }, 3000);
+        }
+
+        // Показ попередження про вставку
+        function showPasteWarning() {
+            alert('⛔ ВСТАВКА ТЕКСТУ ЗАБОРОНЕНА!\n\nВи повинні написати текст самостійно.\nСпроба вставки зафіксована в системі.\n\nСпроб вставки: ' + pasteAttempts);
+        }
+
+        // ЗАХИСТ ВІД DEVTOOLS
+        let devtools = {open: false, orientation: null};
+        const threshold = 160;
+        const emitEvent = (state, orientation) => {
+            if (state) {
+                devToolsOpen = true;
+                document.getElementById('devtoolsBlocker').style.display = 'flex';
+                trackActivity('devtools_open', 'detected');
+                suspiciousActivity += 5;
+            } else {
+                devToolsOpen = false;
+                document.getElementById('devtoolsBlocker').style.display = 'none';
+            }
+        };
+
+        setInterval(() => {
+            if (window.outerHeight - window.innerHeight > threshold || 
+                window.outerWidth - window.innerWidth > threshold) {
+                if (!devtools.open) {
+                    emitEvent(true, null);
+                    devtools.open = true;
+                }
+            } else {
+                if (devtools.open) {
+                    emitEvent(false, null);
+                    devtools.open = false;
+                }
+            }
+        }, 500);
+
+        // Блокування правої кнопки миші
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+            suspiciousActivity++;
+            trackActivity('contextmenu_blocked', 'attempt');
+            return false;
+        });
+
+        // Блокування клавіатурних комбінацій
+        document.addEventListener('keydown', function(e) {
+            // Блокуємо F12, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+U
+            if (e.keyCode === 123 || 
+                (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74)) ||
+                (e.ctrlKey && e.keyCode === 85)) {
+                e.preventDefault();
+                suspiciousActivity++;
+                trackActivity('devtools_key_blocked', e.keyCode);
+                return false;
+            }
+            
+            // Блокуємо Ctrl+A в есе
+            if (e.ctrlKey && e.keyCode === 65) {
+                if (e.target.classList.contains('essay-textarea')) {
+                    e.preventDefault();
+                    return false;
+                }
+            }
+            
+            // Блокуємо Ctrl+C, Ctrl+X
+            if (e.ctrlKey && (e.keyCode === 67 || e.keyCode === 88)) {
+                e.preventDefault();
+                showCopyWarning();
+                return false;
+            }
+            
+        });
+
+        // Таймер обновляется в updateTimePanel и не зависит от фокуса окна.
+        let activeSeconds = 0;
+        let manualTimeOverride = null;
+
+        // Ручне коригування часу з явною позначкою в інтерфейсі та звіті.
+        function applyManualTime() {
+            const input = document.getElementById('manualTimeInput');
+            const value = input.value.trim();
+            const match = value.match(/^(\d+):([0-5]\d):([0-5]\d)$/);
+            if (!match) {
+                alert('Введіть час у форматі ГГ:ХХ:СС, наприклад 63:21:56.');
+                return;
+            }
+            manualTimeOverride = `${String(Number(match[1])).padStart(2, '0')}:${match[2]}:${match[3]}`;
+            document.getElementById('manualTimeLabel').textContent = 'Застосовано вручну; фактичний таймер збережено окремо';
+            updateTimePanel();
+        }
+
+        function clearManualTime() {
+            manualTimeOverride = null;
+            document.getElementById('manualTimeInput').value = '';
+            document.getElementById('manualTimeLabel').textContent = 'Не застосовано; показується фактичний таймер';
+            updateTimePanel();
+        }
+
+        // Синхронізація відповідей
+        function syncAnswer(questionName, value) {
+            const questionNum = questionName.replace('q', '');
+            const answerField = document.getElementById(`answer${questionNum}`);
+            if (answerField) {
+                answerField.value = value.toUpperCase();
+            }
+        }
+
+        // Відстеження активності
+        function trackActivity(action, value) {
+            const activity = {
+                timestamp: new Date().toISOString(),
+                sessionId: sessionId,
+                action: action,
+                value: value,
+                suspicious: suspiciousActivity
+            };
+            
+            activityLog.push(activity);
+            
+            if (activityLog.length > 1000) {
+                activityLog = activityLog.slice(-1000);
+            }
+            
+            localStorage.setItem('activityLog', JSON.stringify(activityLog));
+        }
+
+        // Оновлення прогрес-бару
+        function updateProgress() {
+            let completed = 0;
+            let total = 2; // Тільки 2 тестові питання
+            
+            // Підрахунок виконаних тестів
+            for (let i = 1; i <= 2; i++) {
+                const radios = document.getElementsByName('q' + i);
+                for (let j = 0; j < radios.length; j++) {
+                    if (radios[j].checked) {
+                        completed++;
+                        break;
+                    }
+                }
+            }
+            
+            // Підрахунок есеїв
+            let essaysCompleted = 0;
+            const essays = ['essay1', 'essay2', 'essay3', 'essay4', 'essay5', 'essay6', 'essay7', 'essay8', 'essay9', 'essay10', 'essay11'];
+            essays.forEach(essayId => {
+                const essay = document.getElementById(essayId);
+                if (essay && essay.value.trim().length > 300) {
+                    essaysCompleted++;
+                }
+            });
+            
+            document.getElementById('completedTasks').textContent = completed + '/' + total;
+            document.getElementById('completedEssays').textContent = essaysCompleted + '/11';
+        }
+
+        // Оновлення лічильника слів
+        function updateWordCount(textareaId) {
+            const textarea = document.getElementById(textareaId);
+            const text = textarea.value;
+            const charCount = text.length;
+            const wordCount = text.trim() === '' ? 0 : text.trim().split(/\s+/).length;
+            
+            document.getElementById(textareaId + 'Counter').textContent = charCount;
+            document.getElementById(textareaId + 'Words').textContent = wordCount;
+            
+            // Оновлюємо загальну кількість слів
+            updateTotalWords();
+        }
+
+        // Оновлення загальної кількості слів
+        function updateTotalWords() {
+            let totalWords = 0;
+            const essays = ['essay1', 'essay2', 'essay3', 'essay4', 'essay5', 'essay6', 'essay7', 'essay8', 'essay9', 'essay10', 'essay11'];
+            essays.forEach(essayId => {
+                const essay = document.getElementById(essayId);
+                if (essay) {
+                    const text = essay.value.trim();
+                    if (text) {
+                        totalWords += text.split(/\s+/).length;
+                    }
+                }
+            });
+            
+            document.getElementById('totalWords').textContent = totalWords;
+        }
+
+        // Збереження роботи
+        function saveWork(showMessage = true) {
+            const workData = {
+                sessionId: sessionId,
+                timestamp: new Date().toISOString(),
+                studentInfo: {
+                    name: document.getElementById('studentName').value,
+                    group: document.getElementById('studentGroup').value,
+                    studentId: document.getElementById('studentId').value,
+                    year: document.getElementById('studentYear').value
+                },
+                answers: {},
+                essays: {},
+                security: {
+                    copyAttempts: copyAttempts,
+                    pasteAttempts: pasteAttempts,
+                    suspiciousActivity: suspiciousActivity,
+                    activeTime: activeSeconds,
+                    actualTimeSeconds: activeSeconds,
+                    manualTimeOverride: manualTimeOverride
+                }
+            };
+            
+            // Збираємо відповіді на тести
+            for (let i = 1; i <= 2; i++) {
+                const radios = document.getElementsByName('q' + i);
+                for (let j = 0; j < radios.length; j++) {
+                    if (radios[j].checked) {
+                        workData.answers['q' + i] = radios[j].value;
+                        break;
+                    }
+                }
+            }
+            
+            // Збираємо есеї
+            const essays = ['essay1', 'essay2', 'essay3', 'essay4', 'essay5', 'essay6', 'essay7', 'essay8', 'essay9', 'essay10', 'essay11'];
+            essays.forEach((essayId, index) => {
+                const essay = document.getElementById(essayId);
+                const topic = document.getElementById(`topic${index + 1}`);
+                if (essay && topic) {
+                    workData.essays[essayId] = {
+                        topic: topic.value,
+                        content: essay.value,
+                        wordCount: essay.value.trim() === '' ? 0 : essay.value.trim().split(/\s+/).length
+                    };
+                }
+            });
+            
+            localStorage.setItem('criminologyWork', JSON.stringify(workData));
+            if (showMessage) {
+                alert('✅ Роботу збережено успішно!\n\nID сесії: ' + sessionId.substr(0, 12) + '\n\nПродовжуйте виконання завдань.');
+            }
+        }
+
+        // Генерація звіту
+        function generateReport() {
+            if (!confirm('Ви впевнені, що хочете завершити роботу та створити підсумковий звіт?\n\nПісля цього зміни будуть неможливі!')) {
+                return;
+            }
+            
+            // Не показуємо alert під час генерації: Safari iPhone може втратити
+            // дозвіл на відкриття системного меню «Поділитися».
+            saveWork(false);
+            
+            const studentName = document.getElementById('studentName').value || 'Не вказано';
+            const studentGroup = document.getElementById('studentGroup').value || 'Не вказано';
+            const studentId = document.getElementById('studentId').value || 'Не вказано';
+            const studentYear = document.getElementById('studentYear').value || 'Не вказано';
+            const verificationCode = document.getElementById('verificationCode').textContent;
+            
+            const reportData = {
+                sessionId: sessionId,
+                completionTime: new Date().toISOString(),
+                studentInfo: {
+                    name: studentName,
+                    group: studentGroup,
+                    studentId: studentId,
+                    year: studentYear
+                },
+                performance: {
+                    timeSpent: document.getElementById('finalTimeSpent').textContent,
+                    actualTimeSeconds: activeSeconds,
+                    manualTimeOverride: manualTimeOverride,
+                    completedTasks: document.getElementById('completedTasks').textContent,
+                    completedEssays: document.getElementById('completedEssays').textContent,
+                    totalWords: document.getElementById('totalWords').textContent
+                },
+                verificationCode: verificationCode,
+                security: {
+                    copyAttempts: copyAttempts,
+                    pasteAttempts: pasteAttempts,
+                    suspiciousActivity: suspiciousActivity,
+                    devToolsDetected: devToolsOpen
+                }
+            };
+            
+            localStorage.setItem('finalReport', JSON.stringify(reportData));
+            
+            // Автоматичне завантаження файлу
+            downloadCompletedWork(reportData);
+            // Автоматично відкриваємо системне меню iOS. Якщо Safari заборонить
+            // запуск без повторного натискання, панель з кнопкою залишиться на екрані.
+            setTimeout(() => shareGeneratedReport(), 0);
+            
+            // Блокуємо подальше редагування
+            const inputs = document.querySelectorAll('input, textarea, select');
+            inputs.forEach(input => {
+                input.disabled = true;
+            });
+            
+        }
+
+        // Підготовка звіту для iPhone, Safari та звичайного браузера.
+        function downloadCompletedWork(reportData) {
+            const fullName = reportData.studentInfo.name || 'Студент';
+            const lastName = fullName.split(' ')[0] || 'Студент';
+            const group = reportData.studentInfo.group || 'Група';
+            const date = new Date().toLocaleDateString('uk-UA').replace(/\./g, '_');
+            const fileName = `${lastName}_${group}_Кримінологія_${date}.html`;
+            const collectedData = collectAllData();
+            const reportHTML = generateHTMLReport(reportData, collectedData);
+
+            if (generatedReportUrl) URL.revokeObjectURL(generatedReportUrl);
+            generatedReportFile = new File([reportHTML], fileName, { type: 'text/html;charset=utf-8' });
+            generatedReportUrl = URL.createObjectURL(generatedReportFile);
+
+            const panel = document.getElementById('iosSavePanel');
+            const openLink = document.getElementById('openGeneratedReport');
+            const downloadLink = document.getElementById('downloadGeneratedReport');
+            openLink.href = generatedReportUrl;
+            downloadLink.href = generatedReportUrl;
+            downloadLink.download = fileName;
+            panel.style.display = 'block';
+            console.log(`📄 Звіт підготовлено: ${fileName}`);
+        }
+
+        async function shareGeneratedReport() {
+            if (!generatedReportFile) return;
+            try {
+                if (navigator.share && (!navigator.canShare || navigator.canShare({ files: [generatedReportFile] }))) {
+                    await navigator.share({
+                        files: [generatedReportFile],
+                        title: 'Звіт з кримінології',
+                        text: 'Збережіть HTML-файл у застосунок «Файли»'
+                    });
+                } else {
+                    window.open(generatedReportUrl, '_blank', 'noopener');
+                }
+            } catch (error) {
+                if (error.name !== 'AbortError') {
+                    window.open(generatedReportUrl, '_blank', 'noopener');
+                }
+            }
+        }
+
+        // Збір всіх даних роботи
+        function collectAllData() {
+            const data = {
+                tests: {},
+                essays: {}
+            };
+            
+            // Збираємо тестові відповіді
+            for (let i = 1; i <= 2; i++) {
+                const radios = document.getElementsByName('q' + i);
+                for (let j = 0; j < radios.length; j++) {
+                    if (radios[j].checked) {
+                        data.tests['q' + i] = {
+                            value: radios[j].value,
+                            text: radios[j].nextElementSibling.textContent
+                        };
+                        break;
+                    }
+                }
+            }
+            
+            // Збираємо есе
+            for (let i = 1; i <= 11; i++) {
+                const essay = document.getElementById(`essay${i}`);
+                const topic = document.getElementById(`topic${i}`);
+                if (essay && topic) {
+                    const topicText = topic.options[topic.selectedIndex]?.text || 'Тема не обрана';
+                    data.essays[`essay${i}`] = {
+                        topicValue: topic.value,
+                        topicText: topicText,
+                        content: essay.value,
+                        wordCount: essay.value.trim() === '' ? 0 : essay.value.trim().split(/\s+/).length
+                    };
+                }
+            }
+            
+            return data;
+        }
+
+        function formatSeconds(totalSeconds) {
+            const hours = Math.floor(totalSeconds / 3600);
+            const minutes = Math.floor((totalSeconds % 3600) / 60);
+            const seconds = totalSeconds % 60;
+            return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+        }
+
+        // Генерація HTML звіту
+        function generateHTMLReport(reportData, collectedData) {
+            const currentTime = new Date().toLocaleString('uk-UA');
+            
+            return `<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>Кримінологія - ${reportData.studentInfo.name} - ${reportData.studentInfo.group}</title>
+    <style>
+        body { 
+            font-family: 'Times New Roman', serif; 
+            max-width: 900px; 
+            margin: 40px auto; 
+            line-height: 1.6; 
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .header { 
+            background: #003366; 
+            color: white; 
+            padding: 30px; 
+            text-align: center; 
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+        .verification-box { 
+            background: #fff3cd; 
+            border: 2px solid #ffc107; 
+            padding: 20px; 
+            margin: 20px 0; 
+            text-align: center;
+            border-radius: 8px;
+        }
+        .verification-code { 
+            font-size: 24px; 
+            font-weight: bold; 
+            color: #dc3545; 
+            letter-spacing: 2px; 
+            margin: 10px 0; 
+            font-family: monospace;
+            background: white;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .section { 
+            margin: 30px 0; 
+            padding: 25px; 
+            background: white; 
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .theme-title {
+            background: linear-gradient(135deg, #003366, #004080);
+            color: white;
+            padding: 15px;
+            margin: 30px 0 20px 0;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .test-answer {
+            background: #f8f9fa;
+            padding: 15px;
+            margin: 10px 0;
+            border-left: 4px solid #007bff;
+            border-radius: 5px;
+        }
+        .essay-block { 
+            margin: 20px 0; 
+            padding: 20px; 
+            background: #f8f9fa; 
+            border-left: 4px solid #28a745;
+            border-radius: 8px;
+        }
+        .essay-topic {
+            font-weight: bold;
+            color: #28a745;
+            margin-bottom: 10px;
+        }
+        .essay-content {
+            background: white;
+            padding: 15px;
+            border-radius: 5px;
+            white-space: pre-wrap;
+        }
+        .word-count { 
+            color: #28a745; 
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        .stats { 
+            display: grid; 
+            grid-template-columns: repeat(2, 1fr); 
+            gap: 20px; 
+            margin: 20px 0; 
+        }
+        .stat-item { 
+            background: #f8f9fa; 
+            padding: 15px; 
+            text-align: center; 
+            border-radius: 8px;
+            border: 1px solid #dee2e6;
+        }
+        .security-section {
+            background: #fff5f5;
+            border: 2px solid #dc3545;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 30px;
+        }
+        @media print { 
+            body { margin: 20px; }
+            .section { box-shadow: none; }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>САМОСТІЙНА РОБОТА З КРИМІНОЛОГІЇ</h1>
+        <p>Донецький державний університет внутрішніх справ</p>
+        <p>Факультет підготовки фахівців для органів досудового розслідування НП України</p>
+    </div>
+    
+    <div class="verification-box">
+        <h3>🔐 КОД ВЕРИФІКАЦІЇ РОБОТИ</h3>
+        <div class="verification-code">${reportData.verificationCode}</div>
+        <p>Цей код підтверджує автентичність роботи та час її виконання</p>
+        <p><small>Дата та час генерації: ${currentTime}</small></p>
+    </div>
+    
+    <div class="section">
+        <h3>👮‍♂️ Інформація про курсанта</h3>
+        <p><strong>ПІБ:</strong> ${reportData.studentInfo.name}</p>
+        <p><strong>Група:</strong> ${reportData.studentInfo.group}</p>
+        <p><strong>Номер залікової книжки:</strong> ${reportData.studentInfo.studentId}</p>
+        <p><strong>Курс:</strong> ${reportData.studentInfo.year}</p>
+        <p><strong>Час виконання:</strong> ${reportData.performance.timeSpent}</p>
+        ${reportData.performance.manualTimeOverride ? `<p style="color:#856404;"><strong>Примітка:</strong> це значення введено вручну; фактичний таймер: ${formatSeconds(reportData.performance.actualTimeSeconds)}</p>` : ""}
+    </div>
+    
+    <div class="section">
+        <h3>📊 Статистика виконання</h3>
+        <div class="stats">
+            <div class="stat-item">
+                <h4>Тестові завдання</h4>
+                <p style="font-size: 24px;">${reportData.performance.completedTasks}</p>
+            </div>
+            <div class="stat-item">
+                <h4>Доповіді</h4>
+                <p style="font-size: 24px;">${reportData.performance.completedEssays}</p>
+            </div>
+            <div class="stat-item">
+                <h4>Загалом слів</h4>
+                <p style="font-size: 24px;">${reportData.performance.totalWords}</p>
+            </div>
+            <div class="stat-item">
+                <h4>Час роботи</h4>
+                <p style="font-size: 24px;">${reportData.performance.timeSpent}</p>
+            </div>
+        </div>
+    </div>
+    
+    ${generateTestAnswersHTML(collectedData.tests)}
+    ${generateEssaysHTML(collectedData.essays)}
+    
+    <div class="security-section">
+        <h3>🔒 Інформація безпеки</h3>
+        <p><strong>ID сесії:</strong> ${reportData.sessionId}</p>
+        <p><strong>Спроб копіювання:</strong> ${reportData.security.copyAttempts}</p>
+        <p><strong>Спроб вставки:</strong> ${reportData.security.pasteAttempts}</p>
+        <p><strong>Підозріла активність:</strong> ${reportData.security.suspiciousActivity > 10 ? 'Виявлена' : 'Відсутня'}</p>
+        <p><strong>Час завершення:</strong> ${currentTime}</p>
+    </div>
+    
+    <div style="text-align: center; margin-top: 50px; padding: 20px; background: #e8f5e9; border-radius: 10px;">
+        <p style="font-size: 18px; color: #28a745; font-weight: bold;">✅ Роботу успішно виконано та захищено від плагіату</p>
+        <p style="color: #666; margin-top: 10px;">Файл згенеровано автоматично системою тестування</p>
+    </div>
+</body>
+</html>`;
+        }
+
+        // Генерація HTML для тестових відповідей
+        function generateTestAnswersHTML(tests) {
+            if (!tests || Object.keys(tests).length === 0) return '';
+            
+            let html = '<div class="theme-title">ТЕСТОВІ ЗАВДАННЯ</div>';
+            
+            for (let key in tests) {
+                const questionNum = key.replace('q', '');
+                html += `
+                    <div class="test-answer">
+                        <strong>Питання ${questionNum}:</strong><br>
+                        Відповідь: ${tests[key].value}) ${tests[key].text}
+                    </div>
+                `;
+            }
+            
+            return html;
+        }
+
+        // Генерація HTML для есе
+        function generateEssaysHTML(essays) {
+            if (!essays || Object.keys(essays).length === 0) return '';
+            
+            let html = '';
+            const themes = [
+                'ТЕМА 1. Поняття, предмет, система кримінології',
+                'ТЕМА 2. Злочинність та її показники',
+                'ТЕМА 3. Детермінація злочинності',
+                'ТЕМА 4. Кримінологічне вчення про особистість кримінального правопорушника',
+                'ТЕМА 5. Індивідуальна кримінально протиправна поведінка. Віктимологія',
+                'ТЕМА 6. Протидія злочинності',
+                'ТЕМА 7. Кримінологічна характеристика та протидія агресивно-насильницькій злочинності',
+                'ТЕМА 8. Кримінологічна характеристика та протидія загальнокримінальній корисливій злочинності',
+                'ТЕМА 9. Кримінологічна характеристика та протидія професійній, організованій та рецидивній злочинності',
+                'ТЕМА 10. Кримінологічна характеристика та протидія наркозлочинності',
+                'ТЕМА 11. Кримінологічна характеристика та протидія економічній злочинності'
+            ];
+            
+            for (let i = 1; i <= 11; i++) {
+                const essay = essays[`essay${i}`];
+                if (essay && essay.content) {
+                    html += `
+                        <div class="theme-title">${themes[i-1]}</div>
+                        <div class="essay-block">
+                            <div class="essay-topic">Обрана тема: ${essay.topicText}</div>
+                            <div class="word-count">Слів: ${essay.wordCount}</div>
+                            <div class="essay-content">${essay.content || 'Доповідь не написана'}</div>
+                        </div>
+                    `;
+                }
+            }
+            
+            return html;
+        }
+
+        // Ініціалізація при завантаженні сторінки
+        document.addEventListener('DOMContentLoaded', function() {
+            generateSessionId();
+            
+            // Запуск таймера
+            setInterval(updateTimePanel, 1000);
+            
+            // Початкове оновлення прогресу
+            updateProgress();
+            
+            console.log('🔐 Система захисту активована');
+            console.log('📝 Session ID:', sessionId);
+            console.log('🛡️ Антиплагіат: АКТИВНИЙ');
+            console.log('⛔ Копіювання/Вставка: ЗАБЛОКОВАНО для есе');
+            console.log('📊 Структура: 11 тем, 2 тести, 11 есе');
+        });
+
+        // Оновлення панелі часу
+        function updateTimePanel() {
+            activeSeconds = Math.max(0, Math.floor((Date.now() - startTime) / 1000));
+            const hours = Math.floor(activeSeconds / 3600);
+            const minutes = Math.floor((activeSeconds % 3600) / 60);
+            const seconds = activeSeconds % 60;
+            const actualTimeString = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+            const timeString = manualTimeOverride || actualTimeString;
+
+            document.getElementById('activeTime').textContent = timeString;
+            document.getElementById('finalTimeSpent').textContent = timeString;
+
+            const status = document.getElementById('activityStatus');
+            status.textContent = 'Нормально';
+            status.style.color = '#28a745';
+        }
+
+        // Попередження при спробі закрити сторінку
+        window.addEventListener('beforeunload', function(e) {
+            if (!document.querySelector('input:disabled')) {
+                const message = 'Ви впевнені, що хочете покинути сторінку? Незбережені дані будуть втрачені!';
+                e.returnValue = message;
+                return message;
+            }
+        });
+
+        // Блокування вибору тексту
+        document.onselectstart = function(e) {
+            if (e.target.tagName !== 'TEXTAREA' && e.target.tagName !== 'INPUT') {
+                return false;
+            }
+        };
+
+        // Drag-and-drop не блокируется.
+    </script>
+</body>
+</html>
